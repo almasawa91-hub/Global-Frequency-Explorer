@@ -1,5 +1,5 @@
 name: global_frequency_explorer
-description: Global Frequency Explorer - world radio map and live streaming.
+description: Offline Frequency & FM Explorer - offline tuner, noise generator, local audio player and recorder.
 publish_to: 'none'
 version: 0.1.0+1
 environment:
@@ -8,13 +8,11 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  flutter_map: ^7.0.2
-  latlong2: ^0.9.1
-  http: ^1.2.2
   just_audio: ^0.9.42
-  audio_service: ^0.18.15
+  record: ^5.2.1
+  file_picker: ^8.1.2
+  path_provider: ^2.1.4
   shared_preferences: ^2.3.2
-  url_launcher: ^6.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
