@@ -50,7 +50,6 @@ class _TunerHomeState extends State<TunerHome> {
   bool _scanning = false;
   String _status = 'جاهز للعمل دون إنترنت';
   String? _audioPath;
-  String? _recordPath;
   List<String> _savedFrequencies = [];
   List<String> _recordings = [];
   int _tab = 0;
@@ -173,7 +172,6 @@ class _TunerHomeState extends State<TunerHome> {
     if (_recording) {
       final path = await _recorder.stop();
       if (path != null) {
-        _recordPath = path;
         if (!_recordings.contains(path)) _recordings.insert(0, path);
         await _persistLists();
       }
@@ -302,11 +300,11 @@ class _TunerHomeState extends State<TunerHome> {
             ),
           ),
           Row(children: [
-            IconButton.filledTonal(onPressed: () => setState(() => _frequency = max(87.5, _frequency - .1)), icon: const Icon(Icons.remove)),
+            IconButton.filledTonal(onPressed: () => setState(() => _frequency = max(87.5, _frequency - .1).toDouble()), icon: const Icon(Icons.remove)),
             const Spacer(),
             TextButton.icon(onPressed: _saveFrequency, icon: Icon(_savedFrequencies.contains(_frequencyLabel) ? Icons.bookmark : Icons.bookmark_add_outlined, color: neon), label: Text(_savedFrequencies.contains(_frequencyLabel) ? 'SAVED' : 'SAVE')),
             const Spacer(),
-            IconButton.filledTonal(onPressed: () => setState(() => _frequency = min(108, _frequency + .1)), icon: const Icon(Icons.add)),
+            IconButton.filledTonal(onPressed: () => setState(() => _frequency = min(108, _frequency + .1).toDouble()), icon: const Icon(Icons.add)),
           ]),
           const Divider(color: Color(0xFF293947), height: 30),
           Row(children: [
