@@ -20,7 +20,36 @@ jobs:
       - name: Generate Android platform files
         run: flutter create . --platforms=android --org com.offlinefrequency
       - name: Set Android compile SDK
-        run: sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts 2>/dev/null || sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 36/' android/app/build.gradle
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          candidates = [Path("android/app/build.gradle.kts"), Path("android/app/build.gradle")]
+          files = [p for p in candidates if p.exists()]
+          if not files:
+              raise SystemExit("Could not find Android app Gradle build file")
+          for path in files:
+              text = path.read_text()
+              lines = text.splitlines()
+              changed = False
+              for i, line in enumerate(lines):
+                  stripped = line.strip()
+                  if stripped.startswith("compileSdk") and ("flutter.compileSdkVersion" in stripped or "compileSdkVersion" in stripped or "compileSdk =" in stripped):
+                      indent = line[:len(line) - len(line.lstrip())]
+                      if path.suffix == ".kts":
+                          lines[i] = indent + "compileSdk = 36"
+                      else:
+                          lines[i] = indent + "compileSdkVersion 36"
+                      changed = True
+                      break
+              if not changed:
+                  raise SystemExit(f"Could not find compileSdk declaration in {path}")
+              path.write_text("\\n".join(lines) + "\\n")
+              print(f"Updated {path}:")
+              for line in lines:
+                  if line.strip().startswith("compileSdk"):
+                      print(line)
+          PY
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
