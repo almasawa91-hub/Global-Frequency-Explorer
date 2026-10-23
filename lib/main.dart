@@ -95,7 +95,41 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final ids = prefs.getStringList('favorite_station_ids') ?? [];
-    if (mounted) setState(() => _favorites = _stations.where((s) => ids.contains(s.id)).toList());
+    if (ids.isEmpty) {
+      if (mounted) setState(() => _favorites = []);
+      return;
+    }
+
+    // Resolve saved stations independently of the current search/top-stations list.
+    final known = <String, Station>{
+      for (final station in _stations) station.id: station,
+    };
+    final missing = ids.where((id) => !known.containsKey(id)).toList();
+    if (missing.isNotEmpty) {
+      try {
+        // Radio Browser accepts comma-separated station UUIDs on this endpoint.
+        final uri = Uri.parse('${RadioApi.base}/stations/byuuid/${missing.join(',')}');
+        final response = await http.get(
+          uri,
+          headers: {'User-Agent': 'GlobalFrequencyExplorer/0.1'},
+        ).timeout(const Duration(seconds: 12));
+        if (response.statusCode == 200) {
+          final raw = jsonDecode(response.body);
+          if (raw is List) {
+            for (final item in raw.whereType<Map<String, dynamic>>()) {
+              final station = Station.fromJson(item);
+              known[station.id] = station;
+            }
+          }
+        }
+      } catch (_) {
+        // Keep any favorites already available locally if the service is offline.
+      }
+    }
+    if (mounted) {
+      setState(() => _favorites = ids.map((id) => known[id])
+          .whereType<Station>().toList());
+    }
   }
 
   Future<void> _saveFavorite(Station s) async {
