@@ -136,7 +136,11 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
   Future<void> _saveFavorite(Station s) async {
     final prefs = await SharedPreferences.getInstance();
     final ids = prefs.getStringList('favorite_station_ids') ?? [];
-    if (ids.contains(s.id)) { ids.remove(s.id); } else { ids.add(s.id); }
+    if (ids.contains(s.id)) {
+      ids.remove(s.id);
+    } else {
+      ids.add(s.id);
+    }
     await prefs.setStringList('favorite_station_ids', ids);
     setState(() {
       if (ids.contains(s.id)) { if (!_favorites.any((x) => x.id == s.id)) _favorites.add(s); }
@@ -195,7 +199,7 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
         Expanded(child: _tab == 0 ? _mapView() : _stationList(visible)),
       ])),
       bottomNavigationBar: NavigationBar(
-        backgroundColor: panel, indicatorColor: cyan.withOpacity(.16), selectedIndex: _tab,
+        backgroundColor: panel, indicatorColor: cyan.withValues(alpha: .16), selectedIndex: _tab,
         onDestinationSelected: (v) => setState(() => _tab = v),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.public), label: 'الخريطة'),
@@ -217,7 +221,7 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
         MarkerLayer(markers: _stations.where((s) => s.lat != null && s.lon != null && s.lat!.abs() <= 90 && s.lon!.abs() <= 180)
           .take(500).map((s) => Marker(point: LatLng(s.lat!, s.lon!), width: 42, height: 42,
             child: GestureDetector(onTap: () => _stationDetails(s), child: Container(
-              decoration: BoxDecoration(color: cyan.withOpacity(.18), shape: BoxShape.circle, border: Border.all(color: cyan, width: 1.5)),
+              decoration: BoxDecoration(color: cyan.withValues(alpha: .18), shape: BoxShape.circle, border: Border.all(color: cyan, width: 1.5)),
               child: const Icon(Icons.radio, color: cyan, size: 22),
             )),
           )).toList()),
@@ -245,9 +249,9 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
       itemBuilder: (context, i) {
         final s = list[i], fav = _favorites.any((x) => x.id == s.id);
         return Card(color: panel, margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: cyan.withOpacity(.12))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: cyan.withValues(alpha: .12))),
           child: ListTile(
-            leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: violet.withOpacity(.2), borderRadius: BorderRadius.circular(12)),
+            leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: violet.withValues(alpha: .2), borderRadius: BorderRadius.circular(12)),
               child: const Icon(Icons.radio, color: cyan)),
             title: Text(s.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
             subtitle: Text('${s.country}  •  ${s.codec} ${s.bitrate > 0 ? '${s.bitrate} kbps' : ''}', maxLines: 1, overflow: TextOverflow.ellipsis),
@@ -264,7 +268,7 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
   Widget _playerBar() => Container(
     margin: const EdgeInsets.fromLTRB(8, 0, 8, 8), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     decoration: BoxDecoration(color: const Color(0xFF101D33), borderRadius: BorderRadius.circular(18),
-      border: Border.all(color: cyan.withOpacity(.45)), boxShadow: [BoxShadow(color: cyan.withOpacity(.08), blurRadius: 20)]),
+      border: Border.all(color: cyan.withValues(alpha: .45)), boxShadow: [BoxShadow(color: cyan.withValues(alpha: .08), blurRadius: 20)]),
     child: Row(children: [
       const Icon(Icons.graphic_eq, color: cyan, size: 32), const SizedBox(width: 10),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
