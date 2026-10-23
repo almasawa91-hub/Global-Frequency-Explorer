@@ -44,7 +44,7 @@ jobs:
                       break
               if not changed:
                   raise SystemExit(f"Could not find compileSdk declaration in {path}")
-              path.write_text("\\n".join(lines) + "\\n")
+              path.write_text("\n".join(lines) + "\n")
               print(f"Updated {path}:")
               for line in lines:
                   if line.strip().startswith("compileSdk"):
