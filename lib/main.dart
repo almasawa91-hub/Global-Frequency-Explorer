@@ -40,7 +40,8 @@ class RadioApi {
     if (query.trim().isNotEmpty) params['name'] = query.trim();
     if (country.trim().isNotEmpty) params['country'] = country.trim();
     final uri = Uri.parse('$base/stations/search').replace(queryParameters: params);
-    final response = await http.get(uri, headers: {'User-Agent': 'GlobalFrequencyExplorer/0.1'});
+    final response = await http.get(uri, headers: {'User-Agent': 'GlobalFrequencyExplorer/0.1'})
+        .timeout(const Duration(seconds: 20));
     if (response.statusCode != 200) throw Exception('Radio service returned ${response.statusCode}');
     final raw = jsonDecode(response.body);
     if (raw is! List) return [];
