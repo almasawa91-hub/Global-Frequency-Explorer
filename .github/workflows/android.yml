@@ -19,6 +19,8 @@ jobs:
           cache: true
       - name: Generate Android platform files
         run: flutter create . --platforms=android --org com.offlinefrequency
+      - name: Set Android compile SDK
+        run: sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts 2>/dev/null || sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 36/' android/app/build.gradle
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
