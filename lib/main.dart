@@ -78,7 +78,7 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
   late final AnimationController _wave;
   List<Station> _stations = [], _favorites = [];
   Station? _current;
-  bool _loading = true, _playing = false, _onlyFavorites = false;
+  bool _loading = true, _playing = false;
   String? _error;
   int _tab = 0;
 
