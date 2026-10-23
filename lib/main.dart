@@ -238,11 +238,15 @@ class _ExplorerHomeState extends State<ExplorerHome> with SingleTickerProviderSt
   ]);
 
   Widget _stationList(List<Station> stations) {
-    if (_loading) return const Center(child: CircularProgressIndicator(color: cyan));
-    if (_error != null) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-      Text(_error!, textAlign: TextAlign.center), const SizedBox(height: 12),
-      FilledButton(onPressed: () => _load(query: _search.text), child: const Text('إعادة المحاولة')),
-    ]));
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator(color: cyan));
+    }
+    if (_error != null) {
+      return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Text(_error!, textAlign: TextAlign.center), const SizedBox(height: 12),
+        FilledButton(onPressed: () => _load(query: _search.text), child: const Text('إعادة المحاولة')),
+      ]));
+    }
     final list = _tab == 2 ? (List<Station>.from(stations)..sort((a,b) => b.votes.compareTo(a.votes))) : stations;
     if (list.isEmpty) return const Center(child: Text('لا توجد محطات هنا بعد.'));
     return ListView.builder(padding: const EdgeInsets.only(bottom: 105), itemCount: list.length,
