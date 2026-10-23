@@ -1,7 +1,7 @@
-name: Flutter Android APK
+name: Offline Frequency & FM Explorer Android
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, offline-fm-explorer]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -18,7 +18,7 @@ jobs:
           channel: stable
           cache: true
       - name: Generate Android platform files
-        run: flutter create . --platforms=android --org com.globalfrequency
+        run: flutter create . --platforms=android --org com.offlinefrequency
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
@@ -30,7 +30,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: global-frequency-explorer-debug-apk
+          name: offline-frequency-fm-explorer-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
